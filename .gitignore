@@ -1,0 +1,10 @@
+*.pyc
+*\*\__pycache__
+teas/__pycache__/admin.cpython-311.pyc
+teas/__pycache__/admin.cpython-312.pyc
+teas/__pycache__/models.cpython-311.pyc
+teas/__pycache__/models.cpython-312.pyc
+teas/__pycache__/urls.cpython-311.pyc
+teas/__pycache__/urls.cpython-312.pyc
+teas/__pycache__/views.cpython-311.pyc
+teas/__pycache__/views.cpython-312.pyc
