@@ -1,11 +1,11 @@
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Tea, TeaDescription, TeaCharacteristics
+from .models import Tea, TeaDescription, TeaCharacteristics, TeaUtils
 
 
 def details(request: HttpRequest, tea_id: int):
     if request.method != 'GET':
-        return JsonResponse({'errorInfo': 'Method Not Allowed'}, status=405)
+        return JsonResponse({'errorInfo': 'method_not_allowed'}, status=405)
 
     foundTea = get_object_or_404(Tea, pk=tea_id)
 
@@ -30,21 +30,14 @@ def details(request: HttpRequest, tea_id: int):
 
 def filter(request: HttpRequest):
     if request.method != 'GET':
-        return JsonResponse({'errorInfo': 'Method Not Allowed'}, status=405)
+        return JsonResponse({'errorInfo': 'method_not_allowed'}, status=405)
 
-    tea_types = request.GET.getlist('type', [])
+    tea_types = request.GET.get('type', TeaUtils.all_choices)
+
+    if type(tea_types) is str:
+        tea_types = tea_types.split(',')
+
     search = request.GET.get('search', '')
+    sort = request.GET.get('sort', 'id')
 
-    print(tea_types)
-    print(search)
-
-    if len(tea_types) == 0 and len(search) == 0:
-        return JsonResponse([tea.serialize() for tea in Tea.objects.all()], safe=False)
-
-    if len(tea_types) == 0:
-        return JsonResponse([tea.serialize() for tea in Tea.objects.filter(tea_name__icontains=search)], safe=False)
-
-    if len(search) == 0:
-        return JsonResponse([tea.serialize() for tea in Tea.objects.filter(tea_type__in=tea_types)], safe=False)
-
-    return JsonResponse([tea.serialize() for tea in Tea.objects.filter(tea_type__in=tea_types, tea_name__icontains=search)], safe=False)
+    return JsonResponse({'result': [tea.serialize() for tea in Tea.objects.filter(tea_type__in=tea_types, tea_name__icontains=search).order_by(sort)]}, status=200)

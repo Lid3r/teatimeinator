@@ -2,18 +2,24 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class TeaUtils():
+    all_choices = ['GREEN', 'WHITE', 'BLACK', 'RED', 'YERBA', 'MATCHA']
+
+
 class Tea(models.Model):
     class TeaTypes(models.TextChoices):
-        GREEN = 'GREEN', _('Zielona')
-        WHITE = 'WHITE', _('Biała')
-        BLACK = 'BLACK', _('Czarna')
-        RED = 'RED', _('Czerwona')
+        GREEN = 'GREEN', _('GREEN')
+        WHITE = 'WHITE', _('WHITE')
+        BLACK = 'BLACK', _('BLACK')
+        RED = 'RED', _('RED')
+        YERBA = 'YERBA', _('YERBA')
+        MATCHA = 'MATCHA', _('MATCHA')
 
     tea_name = models.CharField(max_length=100, default='')
     tea_type = models.CharField(choices=TeaTypes.choices, max_length=10)
 
     def __str__(self):
-        return '{ id: ' + str(self.pk) + ', name: ' + self.tea_name + ' }'
+        return self.tea_name
 
     def serialize(self):
         return {
